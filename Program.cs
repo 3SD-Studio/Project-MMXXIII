@@ -54,23 +54,40 @@ static async Task Echo(WebSocket webSocket) {
     var receiveResult = await webSocket.ReceiveAsync(
         new ArraySegment<byte>(buffer), CancellationToken.None);
 
-    Console.WriteLine(receiveResult.ToString());
+    var response = System.Text.Encoding.Default.GetBytes("This is not a text input.");
+    if (receiveResult.MessageType == WebSocketMessageType.Text) {
+        var str = System.Text.Encoding.Default.GetString(buffer, 0, receiveResult.Count);
+        Console.WriteLine(str);
+        str += " - IT IS SERVER RESPONSE";
+        response = System.Text.Encoding.Default.GetBytes(str);
+    }
 
-    while (!receiveResult.CloseStatus.HasValue)
-    {
-        Console.WriteLine(buffer);
+    
+    while (!receiveResult.CloseStatus.HasValue) {
         await webSocket.SendAsync(
-            new ArraySegment<byte>(buffer, 0, receiveResult.Count),
+            new ArraySegment<byte>(response, 0, response.Length),
             receiveResult.MessageType,
             receiveResult.EndOfMessage,
-            CancellationToken.None);
+            CancellationToken.None
+        );
 
         receiveResult = await webSocket.ReceiveAsync(
-            new ArraySegment<byte>(buffer), CancellationToken.None);
+            new ArraySegment<byte>(buffer), CancellationToken.None
+        );
+        
+        response = System.Text.Encoding.Default.GetBytes("This is not a text input.");
+        if (receiveResult.MessageType == WebSocketMessageType.Text) {
+            var str = System.Text.Encoding.Default.GetString(buffer, 0, receiveResult.Count);
+            Console.WriteLine(str);
+            str += " - IT IS SERVER RESPONSE";
+            response = System.Text.Encoding.Default.GetBytes(str);
+        }
     }
 
     await webSocket.CloseAsync(
         receiveResult.CloseStatus.Value,
         receiveResult.CloseStatusDescription,
-        CancellationToken.None);
+        CancellationToken.None
+    );
 }
+
