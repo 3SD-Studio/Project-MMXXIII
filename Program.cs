@@ -50,7 +50,7 @@ app.Run();
 
 
 var ticTacToeField = new char[3, 3];
-int turn;
+
 
 static async Task Echo(WebSocket webSocket) {
     var buffer = new byte[1024 * 4];
