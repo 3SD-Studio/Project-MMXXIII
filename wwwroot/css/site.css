@@ -1,5 +1,13 @@
+:root {
+    --main: #034078;
+    --first: #1282a2;
+    --third: #001f54;
+    --fourth: #fefcfb;
+    --fifth: #0a1128;
+}
+
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
@@ -15,6 +23,8 @@ html {
 
 body {
   margin-bottom: 60px;
+  background-color: var(--main);
+  color: white;
 }
 
 #game-name{
@@ -36,18 +46,18 @@ body {
     height:164px;
 }
 
-.vertical-line{
-    float:left;
-    background-color: black;
-    width:4px;
-    height:164px;
+.vertical-line {
+    float: left;
+    background-color: white;
+    width: 4px;
+    height: 164px;
 }
 
-.horizontal-line{
-    clear:both;
-    background-color:black;
-    width:100%;
-    height:4px;
+.horizontal-line {
+    clear: both;
+    background-color: white;
+    width: 100%;
+    height: 4px;
 }
 
 .btn btn-default btn-circle btn-xl{
@@ -55,16 +65,16 @@ body {
     width: 164px;
 }
 
-.actual-button{
-    border:none;
-    background-color:white;
-    height:100%;
-    width:100%;
+.actual-button {
+    border: none;
+    background-color: var(--main);
+    height: 100%;
+    width: 100%;
     transition: background-color 0.2s;
 }
 
 .actual-button:hover{
-    background-color:lightgrey;
+    background-color: var(--fifth);
 }
 
 .custom-footer {
@@ -73,4 +83,63 @@ body {
     width: 100%;
     padding: 5px;
     text-align: center;
+    background-color: var(--third);
+    color: white;
+}
+
+
+a{
+    color: white;
+}
+
+navbar{
+    background-color:var(--third);
+    color: white;
+}
+
+.footer-link{
+    color: white;
+    text-decoration: none;
+    font-style: italic;
+}
+
+.custom-navbar {
+    background-color: var(--third);
+    width: 100%;
+    padding: 0 5px;
+    margin: 0px;
+}
+
+
+.navbar-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: var(--third);
+}
+
+.navbar-list li {
+    float: left;
+}
+
+.navbar-list a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 16px;
+    text-decoration: none;
+}
+
+.navbar-list a:hover {
+    background-color: var(--fifth);
+}
+
+#project-name {
+    font-size: 30px;
+    color: white;
+    display: block;
+    text-align: center;
+    padding: 5px;
+    padding-right:15px;
 }

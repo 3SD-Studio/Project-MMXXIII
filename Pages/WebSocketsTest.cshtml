@@ -4,6 +4,7 @@
     ViewData["Title"] = "WebSocketsTest";
 }
 <body>
+   
     <h1>WebSocket Sample Application</h1>
     <p id="stateLabel">Ready to connect...</p>
     <div>
@@ -33,6 +34,9 @@
     </table>
 
     <script>
+        document.getElementById("websocketstest-nav-link").style.backgroundColor = "#034078";
+        document.getElementById("websocketstest-nav-link").style.color = "black";
+
         var connectionUrl = document.getElementById("connectionUrl");
         var connectButton = document.getElementById("connectButton");
         var stateLabel = document.getElementById("stateLabel");

@@ -4,11 +4,6 @@
 
 }
 
-<!--Tutaj plasze zrób-->
-<table>
-
-</table>
-
 <!-- btn btn-light btn-circle btn-xl -->
 
 <div id="game-name">
@@ -85,13 +80,9 @@
           if (!socket || socket.readyState !== WebSocket.OPEN) {
               alert("Connection error!");
           }
-          console.log("x1y1");
           var data = "x" + x + ", y" + y;
           socket.send(data);
           
          console.log("HELLO");
       }
-
-      
-
 </script>
