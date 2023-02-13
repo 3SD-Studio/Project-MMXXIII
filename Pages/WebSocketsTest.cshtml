@@ -99,11 +99,11 @@
             socket.close(1000, "Closing from client");
         };
 
-        sendButton.onclick = function () {
+        sendButton.onclick = function (x, y) {
             if (!socket || socket.readyState !== WebSocket.OPEN) {
                 alert("socket not connected");
             }
-            var data = sendMessage.value;
+            var data = "x = " + x + "; y= " + y;
             socket.send(data);
             commsLog.innerHTML += '<tr>' +
                 '<td class="commslog-client">Client</td>' +
@@ -113,8 +113,6 @@
 
         connectButton.onclick = function () {
             stateLabel.innerHTML = "Connecting";
-            console.log("hello");
-            console.log(connectionUrl.value)
             socket = new WebSocket(connectionUrl.value);
             socket.onopen = function (event) {
                 updateState();
