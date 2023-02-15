@@ -82,7 +82,30 @@
           }
           var data = "x" + x + ", y" + y;
           socket.send(data);
-          
-         console.log("HELLO");
       }
+
+      let array = [
+        document.getElementById("x1, y1"),
+        document.getElementById("x1, y2"),
+        document.getElementById("x1, y3"),
+        document.getElementById("x2, y1"),
+        document.getElementById("x2, y2"),
+        document.getElementById("x2, y3"),
+        document.getElementById("x3, y1"),
+        document.getElementById("x3, y2"),
+        document.getElementById("x3, y3"),
+      ]
+
+
+      socket.onmessage = function (event) {
+            let new_values = event.data.split(";"); 
+            console.log(new_values)
+
+            for (i = 0; i < 3; i++) {
+                for (j = 0; j < 3; j++) {
+                array[j + 3 * i].textContent = new_values[j + 3 * i][7];
+                }
+            }
+      }
+
 </script>
