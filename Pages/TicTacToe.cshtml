@@ -10,54 +10,68 @@
     <h1>Tic Tac Toe!</h1>
 </div>
 
+<div id="tictactoe-rbutton-container">
+    <div id="tictactoe-container">
 
-<div id="tictactoe-container">
+        <div>
+            <div class="button-holder">
+                <button class="actual-button" id="x1, y1"></button>
+            </div>
+            <div class="vertical-line"></div>
+            <div class="button-holder">
+                <button class="actual-button" id="x2, y1"></button>
+            </div>
+            <div class="vertical-line"></div>
+            <div class="button-holder">
+                <button class="actual-button" id="x3, y1"></button>
+            </div>
+        </div>
 
-    <div class="button-holder">
-        <button class="actual-button" id="x1, y1"></button>
-    </div>
-    <div class="vertical-line"></div>
-    <div class="button-holder">
-        <button class="actual-button" id="x2, y1"></button>
-    </div>
-    <div class="vertical-line"></div>
-    <div class="button-holder">
-        <button class="actual-button" id="x3, y1"></button>
+        <div class="horizontal-line"></div>
+
+        <div>
+            <div class="button-holder">
+                <button class="actual-button" id="x1, y2"></button>
+            </div>
+            <div class="vertical-line"></div>
+            <div class="button-holder">
+                <button class="actual-button" id="x2, y2"></button>
+            </div>
+            <div class="vertical-line"></div>
+            <div class="button-holder">
+                <button class="actual-button" id="x3, y2"></button>
+            </div>
+        </div>
+
+        <div class="horizontal-line"></div>
+
+        <div>
+            <div class="button-holder">
+                <button class="actual-button" id="x1, y3"></button>
+            </div>
+            <div class="vertical-line"></div>
+            <div class="button-holder">
+                <button class="actual-button" id="x2, y3"></button>
+            </div>
+            <div class="vertical-line"></div>
+            <div class="button-holder">
+                <button class="actual-button" id="x3, y3"></button>
+            </div>
+        </div>
+
+
     </div>
 
-    <div class="horizontal-line"></div>
-
-    <div class="button-holder">
-        <button class="actual-button" id="x1, y2"></button>
-    </div>
-
-    <div class="vertical-line"></div>
-    <div class="button-holder">
-        <button class="actual-button" id="x2, y2"></button>
-    </div>
-    <div class="vertical-line"></div>
-    <div class="button-holder">
-        <button class="actual-button" id="x3, y2"></button>
-    </div>
-
-    <div class="horizontal-line"></div>
-
-    <div class="button-holder">
-        <button class="actual-button" id="x1, y3"></button>
-    </div>
-
-    <div class="vertical-line"></div>
-    <div class="button-holder">
-        <button class="actual-button" id="x2, y3"></button>
-    </div>
-    <div class="vertical-line"></div>
-    <div class="button-holder">
-        <button class="actual-button" id="x3, y3"></button>
+    <div id="restart-button-container">
+        <button class="disabled-restart-button" id="restart-button-id">Play again</button>
     </div>
 </div>
 
-
 <script>
+
+      let restartButton = document.getElementById("restart-button-id");
+      restartButton.disabled = true;
+
       document.getElementById("x1, y1").addEventListener("click", function() { clickedField(1,1);});
       document.getElementById("x1, y2").addEventListener("click", function() { clickedField(1,2);});
       document.getElementById("x1, y3").addEventListener("click", function() { clickedField(1,3);});
@@ -67,6 +81,7 @@
       document.getElementById("x3, y1").addEventListener("click", function() { clickedField(3,1);});
       document.getElementById("x3, y2").addEventListener("click", function() { clickedField(3,2);});
       document.getElementById("x3, y3").addEventListener("click", function() { clickedField(3,3);});
+      document.getElementById("restart-button-id").addEventListener("click", function() { restartField();}
         
       var scheme = document.location.protocol === "https:" ? "wss" : "ws";
       var port = document.location.port ? (":" + document.location.port) : "";
@@ -98,14 +113,35 @@
 
 
       socket.onmessage = function (event) {
-            let new_values = event.data.split(";"); 
-            console.log(new_values)
+        if (event.data === "x win.") {
+            restartButton.disabled = false;
+            restartButton.classList.remove("disabled-restart-button");
+            restartButton.classList.add("restart-button");
+            return;
+        }
 
-            for (i = 0; i < 3; i++) {
-                for (j = 0; j < 3; j++) {
-                array[j + 3 * i].textContent = new_values[j + 3 * i][7];
+        if (event.data == "o win.") {
+            restartButton.disabled = false;
+            restartButton.classList.remove("disabled-restart-button");
+            restartButton.classList.add("restart-button");
+            return;
+        }
+
+        let new_values = event.data.split(";"); 
+        console.log(new_values)
+
+        for (i = 0; i < 3; i++) {
+            for (j = 0; j < 3; j++) {
+                if (new_values[j + 3 * i][7] !== "\x00") {
+                    array[j + 3 * i].textContent = new_values[j + 3 * i][7];
+                    array[j + 3 * i].disabled = true;
+                    array[j + 3 * i].classList.remove("actual-button");
+                    array[j + 3 * i].classList.add("disabled-button");
                 }
             }
+        }
       }
+
+      function(event)
 
 </script>

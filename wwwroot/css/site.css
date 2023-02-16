@@ -1,10 +1,12 @@
+﻿/* ------------------------------Colours----------------------------- */
 :root {
-    --main: #034078;
-    --first: #1282a2;
-    --third: #001f54;
-    --fourth: #fefcfb;
-    --fifth: #0a1128;
+    --main: #034078;    /* Indigo dye */
+    --first: #1282a2;   /* Cerulean */
+    --third: #001f54;   /* Penn Blue */
+    --fourth: #fefcfb;  /* Walter White */
+    --fifth: #0a1128;   /* Oxford Blue */ 
 }
+/* ------------------------------------------------------------------ */
 
 html {
     font-size: 14px;
@@ -34,10 +36,18 @@ body {
     margin-bottom: 30px;
 }
 
+/* ------------------------------TicTacToe---------------------------- */
+#tictactoe-rbutton-container{
+    height:500px;
+    width:700px;
+    margin-left:auto;
+    margin-right:200px;
+}
+
 #tictactoe-container{
     width:500px;
     height:500px;
-    margin: auto;
+    float:left;
 }
 
 .button-holder{
@@ -80,6 +90,47 @@ body {
     background-color: var(--fifth);
 }
 
+.disabled-button {
+    border: none;
+    background-color: var(--third);
+    height: 100%;
+    width: 100%;
+    transition: background-color 0.2s;
+    font-size: 100px;
+    color: white;
+    text-align: center;
+}
+
+#restart-button-container{
+    width:150px;
+    height:75px;
+    float:left;
+    margin-left: 50px;
+    margin-top: 40px;
+}
+
+.restart-button {
+    border:none;
+    background-color: var(--third);
+    height: 100%;
+    width: 100%;
+    transition: background-color 0.2s;
+    font-size: 25px;
+    color: white;
+    text-align: center;
+}
+
+.restart-button:hover {
+    background-color: var(--fifth);
+}
+
+.disabled-restart-button{
+    border:none;
+    background-color:var(--main);
+    color: var(--main);
+}
+/* -------------------------------------------------------------------- */
+
 .custom-footer {
     position: fixed;
     bottom: 0;
@@ -89,7 +140,6 @@ body {
     background-color: var(--third);
     color: white;
 }
-
 
 a{
     color: white;
