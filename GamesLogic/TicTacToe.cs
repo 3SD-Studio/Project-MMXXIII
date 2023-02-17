@@ -1,4 +1,6 @@
-﻿using System.Data.SqlTypes;
+﻿using Project_MMXXIII.Controllers;
+using System.Collections;
+using System.Data.SqlTypes;
 using System.Net.WebSockets;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -10,26 +12,36 @@ namespace Project_MMXXIII.GamesLogic {
         static Thread? notifyThread;
         static bool finished = false;
         static char symbolWin = '\0';
+        static List<int> notificationQueues = new List<int>();
 
         public static async Task Echo(WebSocket webSocket) {
             
             // Thread notifying players about changes in game status. 
-            notifyThread = new Thread(async () => {
-                while (finished != true) {
-                    await Notify(webSocket);
-                    Thread.Sleep(100);
-                }
+            notifyThread = new Thread(async (arg) => {
                 await Notify(webSocket);
+                var count = (arg as List<int>)!.Count;
+                ((List<int>)arg).Add(0);
+                while (finished != true) {
+                    //await Notify(webSocket);
+                    //Thread.Sleep(100);
+                    if (((List<int>)arg)[count]! > 0) {
+                        await Notify(webSocket);
+                        ((List<int>)arg)[count]!--;
+                    }
+                    Thread.Sleep(300);
+                }
 
-                var winningMessage = Encoding.Default.GetBytes($"{symbolWin} win.");
-                await webSocket.SendAsync(
-                    new ArraySegment<byte>(winningMessage, 0, winningMessage.Length),
-                    WebSocketMessageType.Text,
-                    WebSocketMessageFlags.EndOfMessage,
-                    CancellationToken.None
-                );
+                await Notify(webSocket);
+                await sendMessage($"{symbolWin} win.", webSocket);
+                //var winningMessage = Encoding.Default.GetBytes($"{symbolWin} win.");
+                //await webSocket.SendAsync(
+                //    new ArraySegment<byte>(winningMessage, 0, winningMessage.Length),
+                //    WebSocketMessageType.Text,
+                //    WebSocketMessageFlags.EndOfMessage,
+                //    CancellationToken.None
+                //);
             });
-            notifyThread.Start();
+            notifyThread.Start(notificationQueues);
 
             // Buffer needed for websocet.ReciveAsync method, used for storing data. 
             var buffer = new byte[1024 * 4];
@@ -48,6 +60,11 @@ namespace Project_MMXXIII.GamesLogic {
 
                 table[int.Parse(str.Substring(1, 1)) - 1, 
                     int.Parse(str.Substring(5, 1)) - 1] = temp;
+                
+                for (int i = 0; i < notificationQueues.Count; i++) {
+                    Console.WriteLine(notificationQueues.Count);
+                    notificationQueues[i]++;
+                }
             }
 
             while (!receiveResult.CloseStatus.HasValue) {
@@ -69,9 +86,13 @@ namespace Project_MMXXIII.GamesLogic {
                         table[xIndex, yIndex] = temp;
 
                         char symbol = ' ';
-                        if (Check(table, ref symbol) && !finished) {
+                        if (Check(ref symbol) && !finished) {
                             finished = true;
                             symbolWin = symbol;
+                        }
+
+                        for (int i = 0; i < notificationQueues.Count; i++) {
+                            notificationQueues[i]++;
                         }
                     }
                 }
@@ -93,7 +114,20 @@ namespace Project_MMXXIII.GamesLogic {
                 }
             }
 
-            var response = Encoding.Default.GetBytes(result);
+            //var response = Encoding.Default.GetBytes(result);
+
+            //await webSocket.SendAsync(
+            //    new ArraySegment<byte>(response, 0, response.Length),
+            //    WebSocketMessageType.Text,
+            //    WebSocketMessageFlags.EndOfMessage,
+            //    CancellationToken.None
+            //);
+
+            await sendMessage(result, webSocket);
+        }
+
+        private static async Task sendMessage(string message, WebSocket webSocket) {
+            var response = Encoding.Default.GetBytes(message);
 
             await webSocket.SendAsync(
                 new ArraySegment<byte>(response, 0, response.Length),
@@ -103,8 +137,7 @@ namespace Project_MMXXIII.GamesLogic {
             );
         }
 
-
-        private static bool Check(char[,] field, ref char symbol) {
+        private static bool Check(ref char symbol) {
             //Checking rows
             if ((table[0, 0] == table[1, 0]) && (table[1, 0] == table[2, 0]) && table[0, 0] != 0) {
                 symbol = table[0, 0];
