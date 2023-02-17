@@ -1,4 +1,5 @@
 ﻿using Project_MMXXIII.Controllers;
+using System;
 using System.Collections;
 using System.Data.SqlTypes;
 using System.Net.WebSockets;
@@ -9,7 +10,6 @@ namespace Project_MMXXIII.GamesLogic {
     public class TicTacToe {
         static char[,] table = new char[3, 3];
         static bool turn = true;
-        static Thread? notifyThread;
         static bool finished = false;
         static char symbolWin = '\0';
         static List<int> notificationQueues = new List<int>();
@@ -17,54 +17,39 @@ namespace Project_MMXXIII.GamesLogic {
         public static async Task Echo(WebSocket webSocket) {
             
             // Thread notifying players about changes in game status. 
-            notifyThread = new Thread(async (arg) => {
+            new Thread(async (arg) => {
+                // Sends initialized board
                 await Notify(webSocket);
+
+                // Adds int item to list, that conatins number of not updated moves for each player. 
                 var count = (arg as List<int>)!.Count;
                 ((List<int>)arg).Add(0);
+
                 while (finished != true) {
-                    //await Notify(webSocket);
-                    //Thread.Sleep(100);
                     if (((List<int>)arg)[count]! > 0) {
                         await Notify(webSocket);
                         ((List<int>)arg)[count]!--;
                     }
-                    Thread.Sleep(300);
+                    Thread.Sleep(100);
                 }
 
+                // After finished game. 
                 await Notify(webSocket);
-                await sendMessage($"{symbolWin} win.", webSocket);
-                //var winningMessage = Encoding.Default.GetBytes($"{symbolWin} win.");
-                //await webSocket.SendAsync(
-                //    new ArraySegment<byte>(winningMessage, 0, winningMessage.Length),
-                //    WebSocketMessageType.Text,
-                //    WebSocketMessageFlags.EndOfMessage,
-                //    CancellationToken.None
-                //);
-            });
-            notifyThread.Start(notificationQueues);
+                await SendMessage($"{symbolWin} win.", webSocket);
+
+            }).Start(notificationQueues);
+
 
             // Buffer needed for websocet.ReciveAsync method, used for storing data. 
             var buffer = new byte[1024 * 4];
 
-            // Data fri
+            // Data from user
             var receiveResult = await webSocket.ReceiveAsync(
                 new ArraySegment<byte>(buffer), CancellationToken.None
             );
 
-
-            var response = Encoding.Default.GetBytes("Something went wrong...");
             if (receiveResult.MessageType == WebSocketMessageType.Text) {
-                var str = Encoding.Default.GetString(buffer, 0, receiveResult.Count);
-                var temp = turn ? 'x' : 'o';
-                turn = !turn;
-
-                table[int.Parse(str.Substring(1, 1)) - 1, 
-                    int.Parse(str.Substring(5, 1)) - 1] = temp;
-                
-                for (int i = 0; i < notificationQueues.Count; i++) {
-                    Console.WriteLine(notificationQueues.Count);
-                    notificationQueues[i]++;
-                }
+                ProcessRecievedMessage(buffer);
             }
 
             while (!receiveResult.CloseStatus.HasValue) {
@@ -72,29 +57,8 @@ namespace Project_MMXXIII.GamesLogic {
                     new ArraySegment<byte>(buffer), CancellationToken.None
                 );
 
-                response = Encoding.Default.GetBytes("Something went wrong...");
-                if (receiveResult.MessageType == WebSocketMessageType.Text)
-                {
-                    var str = Encoding.Default.GetString(buffer, 0, receiveResult.Count);
-                    var temp = turn ? 'x' : 'o';
-                    turn = !turn;
-
-                    var xIndex = int.Parse(str.Substring(1, 1)) - 1;
-                    var yIndex = int.Parse(str.Substring(5, 1)) - 1;
-
-                    if (table[xIndex, yIndex] == '\x00') {
-                        table[xIndex, yIndex] = temp;
-
-                        char symbol = ' ';
-                        if (Check(ref symbol) && !finished) {
-                            finished = true;
-                            symbolWin = symbol;
-                        }
-
-                        for (int i = 0; i < notificationQueues.Count; i++) {
-                            notificationQueues[i]++;
-                        }
-                    }
+                if (receiveResult.MessageType == WebSocketMessageType.Text) {
+                    ProcessRecievedMessage(buffer);
                 }
             }
 
@@ -114,19 +78,11 @@ namespace Project_MMXXIII.GamesLogic {
                 }
             }
 
-            //var response = Encoding.Default.GetBytes(result);
-
-            //await webSocket.SendAsync(
-            //    new ArraySegment<byte>(response, 0, response.Length),
-            //    WebSocketMessageType.Text,
-            //    WebSocketMessageFlags.EndOfMessage,
-            //    CancellationToken.None
-            //);
-
-            await sendMessage(result, webSocket);
+            await SendMessage(result, webSocket);
         }
 
-        private static async Task sendMessage(string message, WebSocket webSocket) {
+
+        private static async Task SendMessage(string message, WebSocket webSocket) {
             var response = Encoding.Default.GetBytes(message);
 
             await webSocket.SendAsync(
@@ -136,6 +92,31 @@ namespace Project_MMXXIII.GamesLogic {
                 CancellationToken.None
             );
         }
+
+
+        private static void ProcessRecievedMessage(byte[] receivedMessage) {
+            var str = Encoding.Default.GetString(receivedMessage, 0, receivedMessage.Length);
+            var temp = turn ? 'x' : 'o';
+            turn = !turn;
+
+            var xIndex = int.Parse(str.Substring(1, 1)) - 1;
+            var yIndex = int.Parse(str.Substring(5, 1)) - 1;
+
+            if (table[xIndex, yIndex] == '\x00') {
+                table[xIndex, yIndex] = temp;
+
+                char symbol = ' ';
+                if (Check(ref symbol) && !finished) {
+                    finished = true;
+                    symbolWin = symbol;
+                }
+
+                for (int i = 0; i < notificationQueues.Count; i++) {
+                    notificationQueues[i]++;
+                }
+            }
+        }
+
 
         private static bool Check(ref char symbol) {
             //Checking rows
