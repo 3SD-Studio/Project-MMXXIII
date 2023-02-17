@@ -37,17 +37,16 @@ body {
 }
 
 /* ------------------------------TicTacToe---------------------------- */
-#tictactoe-rbutton-container{
-    height:500px;
-    width:700px;
-    margin-left:auto;
-    margin-right:200px;
-}
 
 #tictactoe-container{
     width:500px;
     height:500px;
-    float:left;
+    margin-left:auto;
+    margin-right:auto;
+    z-index:-1;
+    position:fixed;
+    left: 0;
+    right: 0;
 }
 
 .button-holder{
@@ -101,16 +100,55 @@ body {
     text-align: center;
 }
 
+.disabled-game-result-container{
+    display:none;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.game-result-container {
+    width: 250px;
+    height: 250px;
+    z-index: 100;
+    position: fixed;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 125px;
+    background-color: var(--main);
+    border: 2px solid var(--fifth);
+    animation: fadeIn 1s;
+   
+}
+
+.game-result-container p{
+    text-align:center;
+    font-size:40px;
+    padding-top: 40px;
+}
+
 #restart-button-container{
     width:150px;
     height:75px;
-    float:left;
-    margin-left: 50px;
-    margin-top: 40px;
+    z-index:100;
+    position:fixed;
+    left: 0;
+    right: 0;
+    margin-left:auto;
+    margin-right:auto;
 }
 
 .restart-button {
-    border:none;
+    border: 2px solid var(--fifth);
     background-color: var(--third);
     height: 100%;
     width: 100%;
@@ -122,12 +160,6 @@ body {
 
 .restart-button:hover {
     background-color: var(--fifth);
-}
-
-.disabled-restart-button{
-    border:none;
-    background-color:var(--main);
-    color: var(--main);
 }
 /* -------------------------------------------------------------------- */
 

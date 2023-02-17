@@ -10,66 +10,67 @@
     <h1>Tic Tac Toe!</h1>
 </div>
 
-<div id="tictactoe-rbutton-container">
-    <div id="tictactoe-container">
+<div id="tictactoe-container">
 
-        <div>
-            <div class="button-holder">
-                <button class="actual-button" id="x1, y1"></button>
-            </div>
-            <div class="vertical-line"></div>
-            <div class="button-holder">
-                <button class="actual-button" id="x2, y1"></button>
-            </div>
-            <div class="vertical-line"></div>
-            <div class="button-holder">
-                <button class="actual-button" id="x3, y1"></button>
-            </div>
+    <div>
+        <div class="button-holder">
+            <button class="actual-button" id="x1, y1"></button>
         </div>
-
-        <div class="horizontal-line"></div>
-
-        <div>
-            <div class="button-holder">
-                <button class="actual-button" id="x1, y2"></button>
-            </div>
-            <div class="vertical-line"></div>
-            <div class="button-holder">
-                <button class="actual-button" id="x2, y2"></button>
-            </div>
-            <div class="vertical-line"></div>
-            <div class="button-holder">
-                <button class="actual-button" id="x3, y2"></button>
-            </div>
+        <div class="vertical-line"></div>
+        <div class="button-holder">
+            <button class="actual-button" id="x2, y1"></button>
         </div>
-
-        <div class="horizontal-line"></div>
-
-        <div>
-            <div class="button-holder">
-                <button class="actual-button" id="x1, y3"></button>
-            </div>
-            <div class="vertical-line"></div>
-            <div class="button-holder">
-                <button class="actual-button" id="x2, y3"></button>
-            </div>
-            <div class="vertical-line"></div>
-            <div class="button-holder">
-                <button class="actual-button" id="x3, y3"></button>
-            </div>
+        <div class="vertical-line"></div>
+        <div class="button-holder">
+            <button class="actual-button" id="x3, y1"></button>
         </div>
-
-
+    </div>
+    
+    <div class="horizontal-line"></div>
+    
+    <div>
+        <div class="button-holder">
+            <button class="actual-button" id="x1, y2"></button>
+        </div>
+        <div class="vertical-line"></div>
+        <div class="button-holder">
+            <button class="actual-button" id="x2, y2"></button>
+        </div>
+        <div class="vertical-line"></div>
+        <div class="button-holder">
+            <button class="actual-button" id="x3, y2"></button>
+        </div>
+    </div>
+    
+    <div class="horizontal-line"></div>
+    
+    <div>
+        <div class="button-holder">
+            <button class="actual-button" id="x1, y3"></button>
+        </div>
+        <div class="vertical-line"></div>
+        <div class="button-holder">
+            <button class="actual-button" id="x2, y3"></button>
+        </div>
+        <div class="vertical-line"></div>
+        <div class="button-holder">
+            <button class="actual-button" id="x3, y3"></button>
+        </div>
     </div>
 
+</div>
+
+<div class="disabled-game-result-container" id="game-result">
+    <p id="result-paragraph"></p>
     <div id="restart-button-container">
         <button class="disabled-restart-button" id="restart-button-id">Play again</button>
     </div>
 </div>
 
 <script>
-
+      let gameResult = document.getElementById("game-result");
       let restartButton = document.getElementById("restart-button-id");
+      let resultParagraph = document.getElementById("result-paragraph");
       restartButton.disabled = true;
 
       document.getElementById("x1, y1").addEventListener("click", function() { clickedField(1,1);});
@@ -113,6 +114,9 @@
 
       socket.onmessage = function (event) {
         if (event.data === "x win.") {
+            resultParagraph.innerHTML = "X won!";
+            gameResult.classList.remove("disabled-game-result-container");
+            gameResult.classList.add("game-result-container");
             restartButton.disabled = false;
             restartButton.classList.remove("disabled-restart-button");
             restartButton.classList.add("restart-button");
@@ -120,6 +124,9 @@
         }
 
         if (event.data == "o win.") {
+            resultParagraph.innerHTML = "O won!";
+            gameResult.classList.remove("disabled-game-result-container");
+            gameResult.classList.add("game-result-container");
             restartButton.disabled = false;
             restartButton.classList.remove("disabled-restart-button");
             restartButton.classList.add("restart-button");
