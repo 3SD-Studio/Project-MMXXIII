@@ -147,6 +147,12 @@ namespace Project_MMXXIII.GamesLogic {
                 symbol = table[2, 0];
                 return true;
             }
+            //Checking draws
+            else if (table.Cast<char>().All(c => c != '\x00'))
+            {
+                symbol = 'd';
+                return true;
+            }
             //Checked ✔️
             else
                 return false;

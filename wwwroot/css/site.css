@@ -94,10 +94,16 @@ body {
     background-color: var(--third);
     height: 100%;
     width: 100%;
-    transition: background-color 0.2s;
     font-size: 100px;
     color: white;
     text-align: center;
+}
+
+.disabled-button1 {
+    border: none;
+    background-color: var(--main);
+    height: 100%;
+    width: 100%;
 }
 
 .disabled-game-result-container{

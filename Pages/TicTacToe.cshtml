@@ -92,11 +92,11 @@
       socket = new WebSocket(connectionUrl);
 
       function clickedField(x, y) {
-          if (!socket || socket.readyState !== WebSocket.OPEN) {
-              alert("Connection error!");
-          }
-          var data = "x" + x + ", y" + y;
-          socket.send(data);
+        if (!socket || socket.readyState !== WebSocket.OPEN) {
+            alert("Connection error!");
+        }
+        var data = "x" + x + ", y" + y;
+        socket.send(data);
       }
 
       let array = [
@@ -120,6 +120,7 @@
             restartButton.disabled = false;
             restartButton.classList.remove("disabled-restart-button");
             restartButton.classList.add("restart-button");
+            disableUnused(array);
             return;
         }
 
@@ -130,20 +131,40 @@
             restartButton.disabled = false;
             restartButton.classList.remove("disabled-restart-button");
             restartButton.classList.add("restart-button");
+            disableUnused(array);
+            return;
+        }
+
+        if(event.data == "d win.") {
+            resultParagraph.innerHTML = "Draw!";
+            gameResult.classList.remove("disabled-game-result-container");
+            gameResult.classList.add("game-result-container");
+            restartButton.disabled = false;
+            restartButton.classList.remove("disabled-restart-button");
+            restartButton.classList.add("restart-button");
+            disableUnused(array);
             return;
         }
 
         let new_values = event.data.split(";"); 
         console.log(new_values)
 
-        for (i = 0; i < 3; i++) {
-            for (j = 0; j < 3; j++) {
-                if (new_values[j + 3 * i][7] !== "\x00") {
-                    array[j + 3 * i].textContent = new_values[j + 3 * i][7];
-                    array[j + 3 * i].disabled = true;
-                    array[j + 3 * i].classList.remove("actual-button");
-                    array[j + 3 * i].classList.add("disabled-button");
-                }
+        for (i = 0; i < 9; i++) {
+            if (new_values[i][7] !== "\x00") {
+                array[i].textContent = new_values[i][7];
+                array[i].disabled = true;
+                array[i].classList.remove("actual-button");
+                array[i].classList.add("disabled-button");
+            }
+        }
+      }
+
+      function disableUnused(array) {
+        for (var i = 0; i < 9; i++){
+            if (array[i].classList.contains("actual-button")) {
+                array[i].disabled = true;
+                array[i].classList.remove("actual-button");
+                array[i].classList.add("disabled-button1");
             }
         }
       }
