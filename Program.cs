@@ -51,4 +51,9 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
+app.MapControllerRoute(
+    name: "lobby",
+    pattern: "{controller=Home}/{action=Index}/{id?}") ;
+
+
 app.Run();
