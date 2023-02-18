@@ -107,6 +107,8 @@ namespace Project_MMXXIII.GamesLogic {
                 RestartGame(webSocket);
                 return;
             }
+
+
             var temp = turn ? 'x' : 'o';
             turn = !turn;
 
@@ -141,8 +143,6 @@ namespace Project_MMXXIII.GamesLogic {
                 finished = false;
             }
             
-            
-
             SetUpNotifyingThread(webSocket);
         }
 
