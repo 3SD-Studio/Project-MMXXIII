@@ -72,6 +72,7 @@
       let restartButton = document.getElementById("restart-button-id");
       let resultParagraph = document.getElementById("result-paragraph");
       restartButton.disabled = true;
+      
 
       document.getElementById("x1, y1").addEventListener("click", function() { clickedField(1,1);});
       document.getElementById("x1, y2").addEventListener("click", function() { clickedField(1,2);});
@@ -91,12 +92,15 @@
 
       socket = new WebSocket(connectionUrl);
 
+      restartButton.addEventListener("click", function() {restartButtonClicked();});
+
       function clickedField(x, y) {
         if (!socket || socket.readyState !== WebSocket.OPEN) {
             alert("Connection error!");
         }
         var data = "x" + x + ", y" + y;
         socket.send(data);
+        
       }
 
       let array = [
@@ -111,7 +115,20 @@
         document.getElementById("x3, y3"),
       ]
 
+       function restartButtonClicked() {
+        if (!socket || socket.readyState !== WebSocket.OPEN) {
+            alert("Connection error!");
+        }
+        var data = "restart";
+        socket.send(data);
 
+        gameResult.classList.add("disabled-game-result-container");
+        gameResult.classList.remove("game-result-container");
+        restartButton.disabled = false;
+        restartButton.classList.add("disabled-restart-button");
+        restartButton.classList.remove("restart-button");
+        enableAll(array);
+      }
       socket.onmessage = function (event) {
         if (event.data === "x win.") {
             resultParagraph.innerHTML = "X won!";
@@ -169,6 +186,21 @@
         }
       }
 
+      function enableAll(array) {
+        for (var i = 0; i < 9; i++){
+            if (array[i].classList.contains("disabled-button")) {
+                array[i].disabled = false;
+                array[i].classList.remove("disabled-button");
+                array[i].classList.add("actual-button");
+            }
+            if (array[i].classList.contains("disabled-button1")) {
+                array[i].disabled = false;
+                array[i].classList.remove("disabled-button1");
+                array[i].classList.add("actual-button");
+            }
+            array[i].textContent = "";
+        }
+      }
      
 
 </script>

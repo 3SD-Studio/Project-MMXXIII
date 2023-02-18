@@ -15,30 +15,8 @@ namespace Project_MMXXIII.GamesLogic {
         static List<int> notificationQueues = new List<int>();
 
         public static async Task Echo(WebSocket webSocket) {
-            
-            // Thread notifying players about changes in game status. 
-            new Thread(async (arg) => {
-                // Sends initialized board
-                await Notify(webSocket);
 
-                // Adds int item to list, that conatins number of not updated moves for each player. 
-                var count = (arg as List<int>)!.Count;
-                ((List<int>)arg).Add(0);
-
-                while (finished != true) {
-                    if (((List<int>)arg)[count]! > 0) {
-                        await Notify(webSocket);
-                        ((List<int>)arg)[count]!--;
-                    }
-                    Thread.Sleep(100);
-                }
-
-                // After finished game. 
-                await Notify(webSocket);
-                await SendMessage($"{symbolWin} win.", webSocket);
-
-            }).Start(notificationQueues);
-
+            SetUpNotifyingThread(webSocket);
 
             // Buffer needed for websocet.ReciveAsync method, used for storing data. 
             var buffer = new byte[1024 * 4];
@@ -49,7 +27,7 @@ namespace Project_MMXXIII.GamesLogic {
             );
 
             if (receiveResult.MessageType == WebSocketMessageType.Text) {
-                ProcessRecievedMessage(buffer);
+                ProcessRecievedMessage(buffer, receiveResult.Count, webSocket);
             }
 
             while (!receiveResult.CloseStatus.HasValue) {
@@ -58,7 +36,7 @@ namespace Project_MMXXIII.GamesLogic {
                 );
 
                 if (receiveResult.MessageType == WebSocketMessageType.Text) {
-                    ProcessRecievedMessage(buffer);
+                    ProcessRecievedMessage(buffer, receiveResult.Count, webSocket);
                 }
             }
 
@@ -82,9 +60,35 @@ namespace Project_MMXXIII.GamesLogic {
         }
 
 
+        private static void SetUpNotifyingThread(WebSocket webSocket) {
+            // Thread notifying players about changes in game status. 
+            new Thread(async (arg) => {
+                // Sends initialized board
+                await Notify(webSocket);
+
+                // Adds int item to list, that conatins number of not updated moves for each player. 
+                var count = (arg as List<int>)!.Count;
+                ((List<int>)arg).Add(0);
+
+                while (finished != true) {
+                    if (((List<int>)arg)[count]! > 0) {
+                        await Notify(webSocket);
+                        ((List<int>)arg)[count]!--;
+                    }
+                    Thread.Sleep(100);
+                }
+
+                // After finished game.
+                await Notify(webSocket);
+                await SendMessage($"{symbolWin} win.", webSocket);
+
+            }).Start(notificationQueues);
+        }
+
         private static async Task SendMessage(string message, WebSocket webSocket) {
             var response = Encoding.Default.GetBytes(message);
 
+            if (webSocket.State != WebSocketState.Open) { return; }
             await webSocket.SendAsync(
                 new ArraySegment<byte>(response, 0, response.Length),
                 WebSocketMessageType.Text,
@@ -94,13 +98,20 @@ namespace Project_MMXXIII.GamesLogic {
         }
 
 
-        private static void ProcessRecievedMessage(byte[] receivedMessage) {
-            var str = Encoding.Default.GetString(receivedMessage, 0, receivedMessage.Length);
+        private static void ProcessRecievedMessage(byte[] receivedMessage, int receivedMessageLength, WebSocket webSocket) {
+            var message = Encoding.Default.GetString(receivedMessage, 0, receivedMessageLength);
+            Console.WriteLine(message);
+            
+            // Restart logic
+            if (message == "restart") {
+                RestartGame(webSocket);
+                return;
+            }
             var temp = turn ? 'x' : 'o';
             turn = !turn;
 
-            var xIndex = int.Parse(str.Substring(1, 1)) - 1;
-            var yIndex = int.Parse(str.Substring(5, 1)) - 1;
+            var xIndex = int.Parse(message.Substring(1, 1)) - 1;
+            var yIndex = int.Parse(message.Substring(5, 1)) - 1;
 
             if (table[xIndex, yIndex] == '\x00') {
                 table[xIndex, yIndex] = temp;
@@ -117,6 +128,23 @@ namespace Project_MMXXIII.GamesLogic {
             }
         }
 
+        private static void RestartGame(WebSocket webSocket) {
+            // Clearing table, only one time, prevents restart when moves were already made by other player. 
+            if (finished) {
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        table[i, j] = '\x00';
+                    }
+                }
+
+                // Restart state
+                finished = false;
+            }
+            
+            
+
+            SetUpNotifyingThread(webSocket);
+        }
 
         private static bool Check(ref char symbol) {
             //Checking rows
