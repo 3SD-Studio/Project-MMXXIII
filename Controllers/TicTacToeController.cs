@@ -1,15 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Project_MMXXIII.Pages;
 
 namespace Project_MMXXIII.Controllers {
-    public class LobbyController : Controller {
+    public class TicTacToeController : Controller {
         public IActionResult Index() {
             return View();
         }
 
-        public IActionResult LobbyCenter() {
-            ViewData["test"] = "hello";
+        [Route("/Game/{id}")]
+        public IActionResult Game(int id) {
+            
             return View();
-        }
+        } 
+
+
     }
 }
