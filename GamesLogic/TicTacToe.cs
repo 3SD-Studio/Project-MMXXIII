@@ -141,6 +141,7 @@ namespace Project_MMXXIII.GamesLogic {
 
                 // Restart state
                 finished = false;
+                turn = true;    
             }
             
             SetUpNotifyingThread(webSocket);

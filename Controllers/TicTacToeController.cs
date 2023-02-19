@@ -6,9 +6,9 @@ namespace Project_MMXXIII.Controllers {
             return View();
         }
 
-        [Route("/Game/{id}")]
+        [Route("/Game/{id?}")]
         public IActionResult Game(int id) {
-            
+            ViewData["id"] = id;
             return View();
         } 
 
