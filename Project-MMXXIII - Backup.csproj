@@ -12,8 +12,6 @@
 
   <ItemGroup>
     <Content Remove="wwwroot\css\NewFile.txt" />
-    <Content Remove="wwwroot\js\NewFile.txt" />
-    <Content Remove="wwwroot\js\TicTacToeLobb" />
   </ItemGroup>
 
   <ItemGroup>

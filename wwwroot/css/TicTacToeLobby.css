@@ -1,0 +1,67 @@
+﻿#lobby-list-container {
+    float:left;
+    width:600px;
+    margin: 0;
+}
+
+#lobbies {
+    list-style-type:none;
+}
+
+#lobbies > li {
+    border: 2px solid black;
+}
+
+#lobbies > li a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    padding: 5px;
+    color:white;
+}
+
+#lobbies > li a:hover{
+    color:white;
+    background-color:green;
+}
+
+#lobbies > li div {
+   display:flex;
+   justify-content: space-between;
+}
+
+p {
+    font-size:20px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#create-button {
+    height: 54px;
+    width: 100px;
+    border-radius: 10px;
+    font-size: 25px;
+    float: left;
+    margin-left: 10px;
+    background-color: var(--third);
+    color: white;
+    transition: background-color 0.2s;
+    text-align: center;
+}
+
+#create-button:hover {
+    background-color: var(--main);
+}
+
+
+
+
+/* ------------------------------Colours----------------------------- */
+:root {
+    --main: #034078; /* Indigo dye */
+    --first: #1282a2; /* Cerulean */
+    --third: #001f54; /* Penn Blue */
+    --fourth: #fefcfb; /* Walter White */
+    --fifth: #0a1128; /* Oxford Blue */
+}

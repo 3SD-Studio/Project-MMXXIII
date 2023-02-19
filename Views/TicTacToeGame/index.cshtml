@@ -1,0 +1,17 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<script>
+    let scheme = document.location.protocol === "https:" ? "wss" : "ws";
+    let port = document.location.port ? (":" + document.location.port) : "";
+    let socket;
+
+    let connectionUrl = scheme + "://" + document.location.hostname + port + document.location.pathname + "ws";
+
+    console.log(connectionUrl);
+    socket = new WebSocket(connectionUrl);
+    socket.send
+</script>

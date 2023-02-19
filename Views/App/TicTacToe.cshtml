@@ -2,20 +2,24 @@
     ViewData["Title"] = "TicTacToe";
 }
 
+<link rel="stylesheet" href="~/css/TicTacToeLobby.css">
+
 <h1>TicTacToe</h1>
+<h3>Available lobbies:</h3>
 
-<div> 
-    <h1> 
-        Available lobbies:
-    </h1>
+<div id="lobby-list-container"> 
 
-    <ul>
+    <ul id="lobbies">
+        <li>
+            <a href="~/tictactoegame">
+                <div>
+                    <p>game_id</p>
+                    <p>player_amount</p>
+                </div>
+            </a>
+            <!-- /tictactoegame/game/lobby_id-->
+        </li>
     </ul>
-
 </div>
 
-<div>
-    <button>
-        Create
-    </button>
-</div>
+<button id="create-button">Create</button>
