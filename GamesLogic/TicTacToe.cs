@@ -8,13 +8,19 @@ using System.Text;
 
 namespace Project_MMXXIII.GamesLogic {
     public class TicTacToe {
-        static char[,] table = new char[3, 3];
+        char[,] table;
         static bool turn = true;
+        char symbol;
         static bool finished = false;
         static char symbolWin = '\0';
         static List<int> notificationQueues = new List<int>();
 
-        public static async Task Echo(WebSocket webSocket) {
+        public TicTacToe(char[,] table, char symbol) {
+            this.table = table;
+            this.symbol = symbol;
+        }
+
+        public async Task Echo(WebSocket webSocket) {
 
             SetUpNotifyingThread(webSocket);
 
@@ -48,7 +54,7 @@ namespace Project_MMXXIII.GamesLogic {
         }
 
 
-        public static async Task Notify(WebSocket webSocket) {
+        public async Task Notify(WebSocket webSocket) {
             var result = "";
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
@@ -60,7 +66,7 @@ namespace Project_MMXXIII.GamesLogic {
         }
 
 
-        private static void SetUpNotifyingThread(WebSocket webSocket) {
+        private void SetUpNotifyingThread(WebSocket webSocket) {
             // Thread notifying players about changes in game status. 
             new Thread(async (arg) => {
                 // Sends initialized board
@@ -85,7 +91,7 @@ namespace Project_MMXXIII.GamesLogic {
             }).Start(notificationQueues);
         }
 
-        private static async Task SendMessage(string message, WebSocket webSocket) {
+        private async Task SendMessage(string message, WebSocket webSocket) {
             var response = Encoding.Default.GetBytes(message);
 
             if (webSocket.State != WebSocketState.Open) { return; }
@@ -98,7 +104,7 @@ namespace Project_MMXXIII.GamesLogic {
         }
 
 
-        private static void ProcessRecievedMessage(byte[] receivedMessage, int receivedMessageLength, WebSocket webSocket) {
+        private void ProcessRecievedMessage(byte[] receivedMessage, int receivedMessageLength, WebSocket webSocket) {
             var message = Encoding.Default.GetString(receivedMessage, 0, receivedMessageLength);
             Console.WriteLine(message);
             
@@ -109,28 +115,28 @@ namespace Project_MMXXIII.GamesLogic {
             }
 
 
-            var temp = turn ? 'x' : 'o';
-            turn = !turn;
+            if ((turn && symbol == 'x') || (!turn && symbol == 'o')) {
+                var xIndex = int.Parse(message.Substring(1, 1)) - 1;
+                var yIndex = int.Parse(message.Substring(5, 1)) - 1;
 
-            var xIndex = int.Parse(message.Substring(1, 1)) - 1;
-            var yIndex = int.Parse(message.Substring(5, 1)) - 1;
+                if (table[xIndex, yIndex] == '\x00') {
+                    table[xIndex, yIndex] = symbol;
 
-            if (table[xIndex, yIndex] == '\x00') {
-                table[xIndex, yIndex] = temp;
+                    char symbolTemp = ' ';
+                    if (Check(ref symbolTemp) && !finished) {
+                        finished = true;
+                        symbolWin = symbolTemp;
+                    }
 
-                char symbol = ' ';
-                if (Check(ref symbol) && !finished) {
-                    finished = true;
-                    symbolWin = symbol;
+                    for (int i = 0; i < notificationQueues.Count; i++) {
+                        notificationQueues[i]++;
+                    }
                 }
-
-                for (int i = 0; i < notificationQueues.Count; i++) {
-                    notificationQueues[i]++;
-                }
+                turn = !turn;
             }
         }
 
-        private static void RestartGame(WebSocket webSocket) {
+        private void RestartGame(WebSocket webSocket) {
             // Clearing table, only one time, prevents restart when moves were already made by other player. 
             if (finished) {
                 for (int i = 0; i < 3; i++) {
@@ -147,7 +153,7 @@ namespace Project_MMXXIII.GamesLogic {
             SetUpNotifyingThread(webSocket);
         }
 
-        private static bool Check(ref char symbol) {
+        private bool Check(ref char symbol) {
             //Checking rows
             if ((table[0, 0] == table[1, 0]) && (table[1, 0] == table[2, 0]) && table[0, 0] != 0) {
                 symbol = table[0, 0];

@@ -22,25 +22,6 @@ var webSocketsOptions = new WebSocketOptions
 app.UseWebSockets(webSocketsOptions);
 
 
-// Handles websocket requests.
-app.Use(async (context, next) => {
-    if (context.Request.Path == "/ws") {
-        if (context.WebSockets.IsWebSocketRequest) {
-            using var webSocket = await context.WebSockets.AcceptWebSocketAsync();
-
-            // Function that handle network ang game logic for tic tac toe, 
-            // Class located in GamesLogic folder
-            await Project_MMXXIII.GamesLogic.TicTacToe.Echo(webSocket);
-        } 
-        else {
-            context.Response.StatusCode = StatusCodes.Status400BadRequest;
-        }
-    } 
-    else {
-        await next(context);
-    }
-
-});
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
