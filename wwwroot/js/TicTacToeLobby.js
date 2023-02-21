@@ -5,6 +5,7 @@ create_button.addEventListener("click", function () { newLobby(); });
 function newLobby() {
     let newLink = document.createElement('li');
     let a = document.createElement("a");
+    let br = document.createElement("br");
     a.href = "~/tictactoegame";
 
     let div = document.createElement("div");
@@ -20,4 +21,5 @@ function newLobby() {
 
     newLink.appendChild(a);
     document.getElementById("lobbies").appendChild(newLink);
+    document.getElementById("lobbies").appendChild(br);
 }
