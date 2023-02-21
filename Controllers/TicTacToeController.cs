@@ -4,13 +4,13 @@ using System.Collections;
 
 namespace Project_MMXXIII.Controllers {
     public class TicTacToeController : Controller {
-        static Dictionary<int, char[,]> games = new Dictionary<int, char[,]>();
+        static Dictionary<string, char[,]> games = new Dictionary<string, char[,]>();
 
         public IActionResult Index() {
             return View();
         }
 
-        public async Task<IActionResult> Game(int id) {
+        public async Task<IActionResult> Game(string id) {
             ViewData["id"] = id;
             ViewData["symbol"] = 'o';
             char[,] new_table;
@@ -24,7 +24,6 @@ namespace Project_MMXXIII.Controllers {
                 if (!games.TryGetValue(id, out new_table)) {
                     games.Add(id, new char[3, 3]);
                     symbol = 'x';
-                    
                 }
 
                 using var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();

@@ -1,4 +1,15 @@
-﻿let gameResult = document.getElementById("game-result");
+﻿let scheme = document.location.protocol === "https:" ? "wss" : "ws";
+let port = document.location.port ? (":" + document.location.port) : "";
+let socket;
+
+let connectionUrl = scheme + "://" + document.location.hostname + port + document.location.pathname;
+
+
+
+console.log(connectionUrl);
+socket = new WebSocket(connectionUrl);
+
+let gameResult = document.getElementById("game-result");
 let restartButton = document.getElementById("restart-button-id");
 let resultParagraph = document.getElementById("result-paragraph");
 restartButton.disabled = true;
@@ -14,15 +25,6 @@ let array = [
     document.getElementById("x3, y2"),
     document.getElementById("x3, y3"),
 ];
-
-let scheme = document.location.protocol === "https:" ? "wss" : "ws";
-let port = document.location.port ? (":" + document.location.port) : "";
-let socket;
-
-let connectionUrl = scheme + "://" + document.location.hostname + port + "/ws";
-
-socket = new WebSocket(connectionUrl);
-
 
 function clickedField(x, y) {
     if (!socket || socket.readyState !== WebSocket.OPEN) {

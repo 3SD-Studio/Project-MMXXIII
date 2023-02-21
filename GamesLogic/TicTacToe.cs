@@ -155,38 +155,25 @@ namespace Project_MMXXIII.GamesLogic {
 
         private bool Check(ref char symbol) {
             //Checking rows
-            if ((table[0, 0] == table[1, 0]) && (table[1, 0] == table[2, 0]) && table[0, 0] != 0) {
-                symbol = table[0, 0];
-                return true;
-            }
-            else if((table[0, 1] == table[1, 1]) && (table[1, 1] == table[2, 1]) && table[0, 1] != 0)
+            for (int row = 0; row < 3; row++)
             {
-                symbol = table[0, 1];
-                return true;
-            }
-            else if ((table[0, 2] == table[1, 2]) && (table[1, 2] == table[2, 2]) && table[0, 2] != 0)
-            {
-                symbol = table[0, 2];
-                return true;
+                if ((table[row, 0] == table[row, 1]) && (table[row, 1] == table[row, 2]) && table[row, 0] != 0)
+                {
+                    symbol = table[row, 0];
+                    return true;
+                }
             }
             //Checking columns
-            else if ((table[0, 0] == table[0, 1]) && (table[0, 1] == table[0, 2]) && table[0, 0] != 0)
+            for (int column = 0; column < 3; column++)
             {
-                symbol = table[0, 0];
-                return true;
-            }
-            else if ((table[1, 0] == table[1, 1]) && (table[1, 1] == table[1, 2]) && table[1, 0] != 0)
-            {
-                symbol = table[1, 0];
-                return true;
-            }
-            else if ((table[2, 0] == table[2, 1]) && (table[2, 1] == table[2, 2]) && table[2, 0] != 0)
-            {
-                symbol = table[2, 0];
-                return true;
+                if ((table[0, column] == table[1, column]) && (table[1, column] == table[2, column]) && table[0, column] != 0)
+                {
+                    symbol = table[0, column];
+                    return true;
+                }
             }
             //Checking diagonals
-            else if ((table[0, 0] == table[1, 1]) && (table[1, 1] == table[2, 2]) && table[0, 0] != 0)
+            if ((table[0, 0] == table[1, 1]) && (table[1, 1] == table[2, 2]) && table[0, 0] != 0)
             {
                 symbol = table[0, 0];
                 return true;
