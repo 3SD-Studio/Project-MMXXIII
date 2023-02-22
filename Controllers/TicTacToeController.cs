@@ -20,7 +20,6 @@ namespace Project_MMXXIII.Controllers {
         }   
 
         public async Task<IActionResult> Game(string id) {
-            if (lobbies.Where(e => e.Key == id).Count() > 0) {
                 ViewData["id"] = id;
                 ViewData["symbol"] = 'o';
                 char[,] new_table;
@@ -42,7 +41,7 @@ namespace Project_MMXXIII.Controllers {
                 } else {
                     HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
                 }
-            }
+            
             
             return View();
         }

@@ -5,7 +5,7 @@ var gameCounter = 1;
 createButton.addEventListener("click", function () { newLobby(); });
 refreshButton.addEventListener("click", function () { location.reload(); });
 
-function newLobby() {
+async function newLobby() {
 
     let addNewLobby =  "/tictactoe/createlobby/" + gameCounter;
     console.log(addNewLobby);
@@ -15,7 +15,8 @@ function newLobby() {
     });
 
     gameCounter += 1;
-    location.reload();
+    await sleep(3000);
+    open("tictactoe/game/" + gameCounter);
 }
 
 function sleep(ms) {
