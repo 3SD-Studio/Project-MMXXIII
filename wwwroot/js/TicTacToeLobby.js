@@ -1,4 +1,5 @@
 ﻿let createButton = document.getElementById("create-button");
+let refreshButton = document.getElementById("refresh-button");
 var gameCounter = 1;
 
 createButton.addEventListener("click", function () { newLobby(); });
@@ -14,8 +15,7 @@ function newLobby() {
     });
 
     gameCounter += 1;
-    sleep(100);
-    open("tictactoe/game/" + gameCounter);
+    location.reload();
 }
 
 function sleep(ms) {
