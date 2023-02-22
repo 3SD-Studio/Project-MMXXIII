@@ -2,26 +2,22 @@
 var gameCounter = 1;
 
 createButton.addEventListener("click", function () { newLobby(); });
+refreshButton.addEventListener("click", function () { location.reload(); });
 
 function newLobby() {
-    let newLink = document.createElement('li');
-    let a = document.createElement("a");
-    let br = document.createElement("br");
-    a.href = "/tictactoe/game/" + gameCounter;
 
-    let div = document.createElement("div");
-    let p1 = document.createElement("p");
-    let p2 = document.createElement("p");
-    p1.innerHTML = "Game: " + gameCounter;
-    p2.innerHTML = "1/2";
+    let addNewLobby =  "/tictactoe/createlobby/" + gameCounter;
+    console.log(addNewLobby);
+    console.log("TUTAJ");
+    fetch(addNewLobby, {
+        method: 'POST',
+    });
 
-    div.appendChild(p1);
-    div.appendChild(p2);
-
-    a.appendChild(div);
-
-    newLink.appendChild(a);
-    document.getElementById("lobbies").appendChild(newLink);
-    document.getElementById("lobbies").appendChild(br);
     gameCounter += 1;
+    sleep(100);
+    open("tictactoe/game/" + gameCounter);
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }

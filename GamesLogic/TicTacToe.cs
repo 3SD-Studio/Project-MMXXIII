@@ -131,8 +131,9 @@ namespace Project_MMXXIII.GamesLogic {
                     for (int i = 0; i < notificationQueues.Count; i++) {
                         notificationQueues[i]++;
                     }
+                    turn = !turn;
                 }
-                turn = !turn;
+                
             }
         }
 
@@ -155,10 +156,8 @@ namespace Project_MMXXIII.GamesLogic {
 
         private bool Check(ref char symbol) {
             //Checking rows
-            for (int row = 0; row < 3; row++)
-            {
-                if ((table[row, 0] == table[row, 1]) && (table[row, 1] == table[row, 2]) && table[row, 0] != 0)
-                {
+            for (int row = 0; row < 3; row++) {
+                if ((table[row, 0] == table[row, 1]) && (table[row, 1] == table[row, 2]) && table[row, 0] != 0) {
                     symbol = table[row, 0];
                     return true;
                 }
@@ -166,32 +165,30 @@ namespace Project_MMXXIII.GamesLogic {
             //Checking columns
             for (int column = 0; column < 3; column++)
             {
-                if ((table[0, column] == table[1, column]) && (table[1, column] == table[2, column]) && table[0, column] != 0)
-                {
+                if ((table[0, column] == table[1, column]) && (table[1, column] == table[2, column]) && table[0, column] != 0) {
                     symbol = table[0, column];
                     return true;
                 }
             }
             //Checking diagonals
-            if ((table[0, 0] == table[1, 1]) && (table[1, 1] == table[2, 2]) && table[0, 0] != 0)
-            {
+            if ((table[0, 0] == table[1, 1]) && (table[1, 1] == table[2, 2]) && table[0, 0] != 0) {
                 symbol = table[0, 0];
                 return true;
             }
-            else if ((table[2, 0] == table[1, 1]) && (table[1, 1] == table[0, 2]) && table[2, 0] != 0)
-            {
+            else if ((table[2, 0] == table[1, 1]) && (table[1, 1] == table[0, 2]) && table[2, 0] != 0) {
                 symbol = table[2, 0];
                 return true;
             }
             //Checking draws
-            else if (table.Cast<char>().All(c => c != '\x00'))
-            {
+            else if (table.Cast<char>().All(c => c != '\x00')) {
                 symbol = 'd';
                 return true;
             }
             //Checked ✔️
-            else
+            else {
                 return false;
+            }
+                
         }
     }        
 }

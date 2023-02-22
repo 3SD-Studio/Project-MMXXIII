@@ -8,19 +8,15 @@
     list-style-type:none;
 }
 
-#lobbies > li {
+#lobbies > li a {
     border: 2px solid black;
     border-radius: 10px;
-}
-
-#lobbies > li a {
     display: block;
     width: 100%;
     height: 100%;
     text-decoration: none;
     color:white;
     transition: background-color 0.1s;
-    border-radius: inherit;
     background-color: var(--third);
 }
 
@@ -54,6 +50,24 @@ p {
 }
 
 #create-button:hover {
+    background-color: var(--main);
+}
+
+#refresh-button {
+    height: 54px;
+    width: 100px;
+    border-radius: 10px;
+    border: 2px solid black;
+    font-size: 25px;
+    float: left;
+    margin-left: 10px;
+    background-color: var(--third);
+    color: white;
+    transition: background-color 0.2s;
+    text-align: center;
+}
+
+#refresh-button:hover {
     background-color: var(--main);
 }
 

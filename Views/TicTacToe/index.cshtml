@@ -1,17 +1,35 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewData["Title"] = "TicTacToe";
 }
 
+<link rel="stylesheet" href="~/css/TicTacToeLobby.css">
+
+<h1>TicTacToe</h1>
+<h3>Available lobbies:</h3>
+
+<div id="lobby-list-container"> 
+
+    <ul id="lobbies">
+        @foreach(var item in (List<KeyValuePair<string, int>>)ViewData["lobbies"]!) {
+            <li>
+                <a href="/tictactoe/game/@item.Key">
+                    <div>
+                        <p>@item.Key</p>
+                        <p>Ilosc Graczy</p>
+                    </div>
+                </a>
+                <br>
+            </li>
+        }
+    </ul>
+</div>
+
+
+<button id="create-button">Create</button>
+
+<button id="refresh-button">Refresh</button>
+
+<script src="~/js/TicTacToeLobby.js"></script>
 <script>
-    let scheme = document.location.protocol === "https:" ? "wss" : "ws";
-    let port = document.location.port ? (":" + document.location.port) : "";
-    let socket;
-
-    let connectionUrl = scheme + "://" + document.location.hostname + port + document.location.pathname + "ws";
-
-    console.log(connectionUrl);
-    socket = new WebSocket(connectionUrl);
-    socket.send
+    
 </script>
