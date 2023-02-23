@@ -52,8 +52,7 @@ namespace Project_MMXXIII.Controllers {
                 }
 
                 using var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
-                //await Project_MMXXIII.GamesLogic.TicTacToe.Echo(webSocket);
-                await new GamesLogic.TicTacToe(games[id], symbol).Echo(webSocket);
+                    await new GamesLogic.TicTacToe(games[id], symbol).Echo(webSocket);
                 } else {
                     HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
                 }
