@@ -14,9 +14,10 @@ async function newLobby() {
         method: 'POST',
     });
 
-    gameCounter += 1;
-    await sleep(3000);
+   
+    //await sleep(3000);
     open("tictactoe/game/" + gameCounter);
+    gameCounter += 1;
 }
 
 function sleep(ms) {

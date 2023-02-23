@@ -1,6 +1,7 @@
 ﻿using Project_MMXXIII.Controllers;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.Net.WebSockets;
 using System.Runtime.CompilerServices;
@@ -8,16 +9,24 @@ using System.Text;
 
 namespace Project_MMXXIII.GamesLogic {
     public class TicTacToe {
-        char[,] table;
-        static bool turn = true;
+        //char[,] table;
         char symbol;
-        static bool finished = false;
-        static char symbolWin = '\0';
-        static List<int> notificationQueues = new List<int>();
+        //bool turn;
+        //bool finished;
+        //char symbolWin = '\0';
+        //List<int> notificationQueues;
 
-        public TicTacToe(char[,] table, char symbol) {
-            this.table = table;
+        GameInfo gameInfo;
+
+        public TicTacToe(GameInfo gameInfo, char symbol) {
+            //this.table = gameInfo.Table;
             this.symbol = symbol;
+            //this.turn = gameInfo.Turn;
+            //this.finished = gameInfo.Finished;
+            //this.symbolWin = gameInfo.SymbolWin;
+            //this.notificationQueues = gameInfo.Queues;
+            this.gameInfo = gameInfo;
+            Console.WriteLine(gameInfo.Turn);
         }
 
         public async Task Echo(WebSocket webSocket) {
@@ -58,7 +67,7 @@ namespace Project_MMXXIII.GamesLogic {
             var result = "";
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
-                    result += $"x{i}, y{j} {table[i, j]} ;";
+                    result += $"x{i}, y{j} {gameInfo.Table[i, j]} ;";
                 }
             }
 
@@ -76,7 +85,7 @@ namespace Project_MMXXIII.GamesLogic {
                 var count = (arg as List<int>)!.Count;
                 ((List<int>)arg).Add(0);
 
-                while (finished != true) {
+                while (gameInfo.Finished[0] != true) {
                     if (((List<int>)arg)[count]! > 0) {
                         await Notify(webSocket);
                         ((List<int>)arg)[count]!--;
@@ -86,9 +95,9 @@ namespace Project_MMXXIII.GamesLogic {
 
                 // After finished game.
                 await Notify(webSocket);
-                await SendMessage($"{symbolWin} win.", webSocket);
+                await SendMessage($"{gameInfo.SymbolWin[0]} win.", webSocket);
 
-            }).Start(notificationQueues);
+            }).Start(gameInfo.Queues);
         }
 
         private async Task SendMessage(string message, WebSocket webSocket) {
@@ -115,23 +124,23 @@ namespace Project_MMXXIII.GamesLogic {
             }
 
 
-            if ((turn && symbol == 'x') || (!turn && symbol == 'o')) {
+            if ((gameInfo.Turn[0] && symbol == 'x') || (!gameInfo.Turn[0] && symbol == 'o')) {
                 var xIndex = int.Parse(message.Substring(1, 1)) - 1;
                 var yIndex = int.Parse(message.Substring(5, 1)) - 1;
 
-                if (table[xIndex, yIndex] == '\x00') {
-                    table[xIndex, yIndex] = symbol;
+                if (gameInfo.Table[xIndex, yIndex] == '\x00') {
+                    gameInfo.Table[xIndex, yIndex] = symbol;
 
                     char symbolTemp = ' ';
-                    if (Check(ref symbolTemp) && !finished) {
-                        finished = true;
-                        symbolWin = symbolTemp;
+                    if (Check(ref symbolTemp) && !gameInfo.Finished[0]) {
+                        gameInfo.Finished[0] = true;
+                        gameInfo.SymbolWin[0] = symbolTemp;
                     }
 
-                    for (int i = 0; i < notificationQueues.Count; i++) {
-                        notificationQueues[i]++;
+                    for (int i = 0; i < gameInfo.Queues.Count; i++) {
+                        gameInfo.Queues[i]++;
                     }
-                    turn = !turn;
+                    gameInfo.Turn[0] = !gameInfo.Turn[0];
                 }
                 
             }
@@ -139,16 +148,16 @@ namespace Project_MMXXIII.GamesLogic {
 
         private void RestartGame(WebSocket webSocket) {
             // Clearing table, only one time, prevents restart when moves were already made by other player. 
-            if (finished) {
+            if (gameInfo.Finished[0]) {
                 for (int i = 0; i < 3; i++) {
                     for (int j = 0; j < 3; j++) {
-                        table[i, j] = '\x00';
+                        gameInfo.Table[i, j] = '\x00';
                     }
                 }
 
                 // Restart state
-                finished = false;
-                turn = true;    
+                gameInfo.Finished[0] = false;
+                gameInfo.Turn[0] = true;    
             }
             
             SetUpNotifyingThread(webSocket);
@@ -157,30 +166,30 @@ namespace Project_MMXXIII.GamesLogic {
         private bool Check(ref char symbol) {
             //Checking rows
             for (int row = 0; row < 3; row++) {
-                if ((table[row, 0] == table[row, 1]) && (table[row, 1] == table[row, 2]) && table[row, 0] != 0) {
-                    symbol = table[row, 0];
+                if ((gameInfo.Table[row, 0] == gameInfo.Table[row, 1]) && (gameInfo.Table[row, 1] == gameInfo.Table[row, 2]) && gameInfo.Table[row, 0] != 0) {
+                    symbol = gameInfo.Table[row, 0];
                     return true;
                 }
             }
             //Checking columns
             for (int column = 0; column < 3; column++)
             {
-                if ((table[0, column] == table[1, column]) && (table[1, column] == table[2, column]) && table[0, column] != 0) {
-                    symbol = table[0, column];
+                if ((gameInfo.Table[0, column] == gameInfo.Table[1, column]) && (gameInfo.Table[1, column] == gameInfo.Table[2, column]) && gameInfo.Table[0, column] != 0) {
+                    symbol = gameInfo.Table[0, column];
                     return true;
                 }
             }
             //Checking diagonals
-            if ((table[0, 0] == table[1, 1]) && (table[1, 1] == table[2, 2]) && table[0, 0] != 0) {
-                symbol = table[0, 0];
+            if ((gameInfo.Table[0, 0] == gameInfo.Table[1, 1]) && (gameInfo.Table[1, 1] == gameInfo.Table[2, 2]) && gameInfo.Table[0, 0] != 0) {
+                symbol = gameInfo.Table[0, 0];
                 return true;
             }
-            else if ((table[2, 0] == table[1, 1]) && (table[1, 1] == table[0, 2]) && table[2, 0] != 0) {
-                symbol = table[2, 0];
+            else if ((gameInfo.Table[2, 0] == gameInfo.Table[1, 1]) && (gameInfo.Table[1, 1] == gameInfo.Table[0, 2]) && gameInfo.Table[2, 0] != 0) {
+                symbol = gameInfo.Table[2, 0];
                 return true;
             }
             //Checking draws
-            else if (table.Cast<char>().All(c => c != '\x00')) {
+            else if (gameInfo.Table.Cast<char>().All(c => c != '\x00')) {
                 symbol = 'd';
                 return true;
             }
