@@ -47,17 +47,13 @@ namespace Project_MMXXIII.Controllers {
                     games.Add(id, gameInfo);
                     symbol = 'x';
                 }
-                else {
-                    gameInfo = games[id];
-                }
 
                 using var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
-                    await new GamesLogic.TicTacToe(games[id], symbol).Echo(webSocket);
-                } else {
-                    HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
-                }
-            
-            
+                await new GamesLogic.TicTacToe(games[id], symbol).Echo(webSocket);
+            } 
+            else {
+                HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+            }
             return View();
         }
 
