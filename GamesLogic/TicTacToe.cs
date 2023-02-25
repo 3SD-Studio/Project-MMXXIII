@@ -9,22 +9,11 @@ using System.Text;
 
 namespace Project_MMXXIII.GamesLogic {
     public class TicTacToe {
-        //char[,] table;
         char symbol;
-        //bool turn;
-        //bool finished;
-        //char symbolWin = '\0';
-        //List<int> notificationQueues;
-
         GameInfo gameInfo;
 
         public TicTacToe(GameInfo gameInfo, char symbol) {
-            //this.table = gameInfo.Table;
             this.symbol = symbol;
-            //this.turn = gameInfo.Turn;
-            //this.finished = gameInfo.Finished;
-            //this.symbolWin = gameInfo.SymbolWin;
-            //this.notificationQueues = gameInfo.Queues;
             this.gameInfo = gameInfo;
             Console.WriteLine(gameInfo.Turn);
         }

@@ -4,8 +4,6 @@ let socket;
 
 let connectionUrl = scheme + "://" + document.location.hostname + port + document.location.pathname;
 
-
-
 console.log(connectionUrl);
 socket = new WebSocket(connectionUrl);
 
