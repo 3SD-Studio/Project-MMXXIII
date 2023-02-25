@@ -6,8 +6,7 @@ refreshButton.addEventListener("click", function () { location.reload(); });
 
 async function newLobby() {
     let gameId = makeid(6); 
-    location.reload();
-    //open("tictactoe/game/" + gameId);
+    open("tictactoe/game/" + gameId, "_self");
 }
 
 function sleep(ms) {

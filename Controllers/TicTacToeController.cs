@@ -9,13 +9,20 @@ namespace Project_MMXXIII.Controllers {
         //static Dictionary<string, int> lobbies = new Dictionary<string, int>();
 
         public IActionResult Index() {
-            ViewData["lobbies"] = games.Select(e => new KeyValuePair<string, int>(e.Key, e.Value.Counter[0]));
-            var lobbiesToRemove = games.Where(e => e.Value.Counter[0] == -400).Select(e => e.Key).ToList();
+            var lobbiesToRemove = games.Where(e => e.Value.Counter[0] == -400)
+                                       .Select(e => e.Key)
+                                       .ToList();
             
             foreach (var id in lobbiesToRemove) {
                 games.Remove(id);
             }
 
+
+            ViewData["lobbies"] = games.Select(e =>
+                new KeyValuePair<string, int>(e.Key, e.Value.Counter[0])
+            );
+
+            
             return View();
         }
 
