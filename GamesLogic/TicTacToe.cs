@@ -47,7 +47,7 @@ namespace Project_MMXXIII.GamesLogic {
             gameInfo.Counter[0]--;
             if (gameInfo.Counter[0] == 0) {
                 //code to remove from lobbies center
-                gameInfo.Counter[0] = -400;
+                gameInfo.Counter[0] = LobbyControl.ToRemove;
             }
             await webSocket.CloseAsync(
                 receiveResult.CloseStatus.Value,

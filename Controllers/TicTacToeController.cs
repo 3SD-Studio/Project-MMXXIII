@@ -3,13 +3,21 @@ using Microsoft.CodeAnalysis;
 using System.Collections;
 using System.Net;
 
+public enum LobbyControl
+{
+    ToRemove = -1,
+    Empty,
+    OnePlayer,
+    TwoPlayers
+};
+
 namespace Project_MMXXIII.Controllers {
     public class TicTacToeController : Controller {
         static Dictionary<string, GameInfo> games = new Dictionary<string, GameInfo>();
         //static Dictionary<string, int> lobbies = new Dictionary<string, int>();
 
         public IActionResult Index() {
-            var lobbiesToRemove = games.Where(e => e.Value.Counter[0] == -400)
+            var lobbiesToRemove = games.Where(e => e.Value.Counter[0] == LobbyControl.ToRemove)
                                        .Select(e => e.Key)
                                        .ToList();
             
@@ -19,7 +27,7 @@ namespace Project_MMXXIII.Controllers {
 
 
             ViewData["lobbies"] = games.Select(e =>
-                new KeyValuePair<string, int>(e.Key, e.Value.Counter[0])
+                new KeyValuePair<string, LobbyControl>(e.Key, e.Value.Counter[0])
             );
 
             
@@ -34,7 +42,7 @@ namespace Project_MMXXIII.Controllers {
             if (!games.TryGetValue(id, out gameInfo)) {
                 ViewData["symbol"] = 'x';
             }
-            else if (games[id].Counter[0] >= 2) {
+            else if (games[id].Counter[0] >= LobbyControl.TwoPlayers) {
                 return Redirect("/tictactoe/");
             }
 
@@ -49,12 +57,12 @@ namespace Project_MMXXIII.Controllers {
                     gameInfo.SymbolWin = new char[1];
                     gameInfo.SymbolWin[0] = '\0';
                     gameInfo.Queues = new List<int>();
-                    gameInfo.Counter = new int[1];
-                    gameInfo.Counter[0] = 1;
+                    gameInfo.Counter = new LobbyControl[1];
+                    gameInfo.Counter[0] = LobbyControl.OnePlayer;
                     games.Add(id, gameInfo);
                     symbol = 'x';
                 }
-                else if (games[id].Counter[0] < 2){
+                else if (games[id].Counter[0] < LobbyControl.TwoPlayers){
                     games[id].Counter[0]++;
                 }
                 else {
@@ -77,6 +85,6 @@ namespace Project_MMXXIII.Controllers {
         public bool[] Finished;
         public char[] SymbolWin;
         public List<int> Queues;
-        public int[] Counter; 
+        public LobbyControl[] Counter; 
     }
 }
