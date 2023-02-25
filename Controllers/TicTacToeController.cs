@@ -1,36 +1,34 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using System.Collections;
+using System.Net;
 
 namespace Project_MMXXIII.Controllers {
     public class TicTacToeController : Controller {
         static Dictionary<string, GameInfo> games = new Dictionary<string, GameInfo>();
-        static List<KeyValuePair<string, int>> lobbies = new List<KeyValuePair<string, int>>();
+        //static Dictionary<string, int> lobbies = new Dictionary<string, int>();
 
         public IActionResult Index() {
-            ViewData["lobbies"] = lobbies;
+            ViewData["lobbies"] = games.Select(e => new KeyValuePair<string, int>(e.Key, e.Value.Counter[0]));
+            var lobbiesToRemove = games.Where(e => e.Value.Counter[0] == -400).Select(e => e.Key).ToList();
+            
+            foreach (var id in lobbiesToRemove) {
+                games.Remove(id);
+            }
+
             return View();
         }
 
-        [HttpPost]
-        public void CreateLobby(string id) {
-            lobbies.Add(new KeyValuePair<string, int>(id, 0));
-            Console.WriteLine("WTF");
-            //return Redirect($"Game/{id}");
-        }   
-
         public async Task<IActionResult> Game(string id) {
-            if (lobbies.Where(e => e.Key == id).Count() >= 0) {
-                Console.WriteLine("TUTAJ COŚ SIĘ DZIEJE I TO WAŻNE");
-            }    
-
-
             ViewData["id"] = id;
             ViewData["symbol"] = 'o';
             GameInfo gameInfo = new GameInfo();
 
             if (!games.TryGetValue(id, out gameInfo)) {
                 ViewData["symbol"] = 'x';
+            }
+            else if (games[id].Counter[0] >= 2) {
+                return Redirect("/tictactoe/");
             }
 
             if (HttpContext.WebSockets.IsWebSocketRequest) {
@@ -44,8 +42,16 @@ namespace Project_MMXXIII.Controllers {
                     gameInfo.SymbolWin = new char[1];
                     gameInfo.SymbolWin[0] = '\0';
                     gameInfo.Queues = new List<int>();
+                    gameInfo.Counter = new int[1];
+                    gameInfo.Counter[0] = 1;
                     games.Add(id, gameInfo);
                     symbol = 'x';
+                }
+                else if (games[id].Counter[0] < 2){
+                    games[id].Counter[0]++;
+                }
+                else {
+                    return Redirect(nameof(Index));
                 }
 
                 using var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
@@ -56,14 +62,14 @@ namespace Project_MMXXIII.Controllers {
             }
             return View();
         }
-
-        
     }
+
     public struct GameInfo {
         public char[,] Table;
         public bool[] Turn;
         public bool[] Finished;
         public char[] SymbolWin;
         public List<int> Queues;
+        public int[] Counter; 
     }
 }

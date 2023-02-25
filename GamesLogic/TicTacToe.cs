@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
+using System.Diagnostics.Metrics;
 using System.Net.WebSockets;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -43,12 +44,15 @@ namespace Project_MMXXIII.GamesLogic {
                     ProcessRecievedMessage(buffer, receiveResult.Count, webSocket);
                 }
             }
-
+            gameInfo.Counter[0]--;
+            if (gameInfo.Counter[0] == 0) {
+                gameInfo.Counter[0] = -400;
+            }
             await webSocket.CloseAsync(
                 receiveResult.CloseStatus.Value,
                 receiveResult.CloseStatusDescription,
                 CancellationToken.None
-            );
+            ); ; ;
         }
 
 

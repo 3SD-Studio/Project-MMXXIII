@@ -6,16 +6,8 @@ refreshButton.addEventListener("click", function () { location.reload(); });
 
 async function newLobby() {
     let gameId = makeid(6); 
-    let addNewLobby = "/tictactoe/createlobby/" + gameId;
-    console.log(addNewLobby);
-    console.log("TUTAJ");
-    fetch(addNewLobby, {
-        method: 'POST',
-    });
-
-   
-    //await sleep(3000);
-    open("tictactoe/game/" + gameId);
+    location.reload();
+    //open("tictactoe/game/" + gameId);
 }
 
 function sleep(ms) {

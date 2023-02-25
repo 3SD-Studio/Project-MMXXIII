@@ -10,15 +10,19 @@
 <div id="lobby-list-container"> 
 
     <ul id="lobbies">
-        @foreach(var item in (List<KeyValuePair<string, int>>)ViewData["lobbies"]!) {
+        @foreach(var item in (IEnumerable<KeyValuePair<string, int>>)ViewData["lobbies"]!) {
             <li>
-                <a href="/tictactoe/game/@item.Key">
-                    <div>
-                        <p>@item.Key</p>
-                        <p>Ilosc Graczy</p>
-                    </div>
-                </a>
-                <br>
+                @{
+                    if (item.Value < 2) {
+                        <a href="/tictactoe/game/@item.Key">
+                            <div>
+                                <p>@item.Key</p>
+                                <p>@item.Value</p>
+                            </div>
+                        </a>
+                        <br>
+                    }
+                }
             </li>
         }
     </ul>
