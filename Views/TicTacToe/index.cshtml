@@ -21,10 +21,12 @@
 <div id="lobby-list-container"> 
 
     <ul id="lobbies">
-        @foreach(var item in (IEnumerable<KeyValuePair<string, LobbyControl>>)ViewData["lobbies"]!) {
+        @foreach (var item in (IEnumerable<KeyValuePair<string, Project_MMXXIII.GamesLogic.TicTacToe.LobbyControl>>)ViewData["lobbies"]!)
+        {
             <li>
                 @{
-                    if (item.Value < LobbyControl.TwoPlayers) {
+                    if (item.Value < Project_MMXXIII.GamesLogic.TicTacToe.LobbyControl.TwoPlayers)
+                    {
                         <a href="/tictactoe/game/@item.Key">
                             <div>
                                 <p>@item.Key</p>
