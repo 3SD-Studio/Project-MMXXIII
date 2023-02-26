@@ -35,7 +35,7 @@ p {
     padding: 10px;
 }
 
-#create-button {
+.custom-button {
     height: 54px;
     width: 100px;
     border-radius: 10px;
@@ -49,26 +49,25 @@ p {
     text-align: center;
 }
 
-#create-button:hover {
+.custom-button:hover {
     background-color: var(--main);
 }
-
-#refresh-button {
-    height: 54px;
-    width: 100px;
-    border-radius: 10px;
+ 
+#lobby-id-input {
+    width:200px;
+    color:white;
+    background-color: var(--main);
+    float:left;
+    border-radius: 15px;
     border: 2px solid black;
-    font-size: 25px;
-    float: left;
-    margin-left: 10px;
-    background-color: var(--third);
-    color: white;
-    transition: background-color 0.2s;
-    text-align: center;
+    margin-left: 100px;
+    height: 54px;
+    font-size:25px;
+    text-align:center;
 }
 
-#refresh-button:hover {
-    background-color: var(--main);
+#lobby-id-input::placeholder {
+    color: var(--third);    
 }
 
 

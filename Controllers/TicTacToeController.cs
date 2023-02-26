@@ -2,19 +2,11 @@
 using Microsoft.CodeAnalysis;
 using System.Collections;
 using System.Net;
-
-public enum LobbyControl
-{
-    ToRemove = -1,
-    Empty,
-    OnePlayer,
-    TwoPlayers
-};
+using static Project_MMXXIII.GamesLogic.TicTacToe;
 
 namespace Project_MMXXIII.Controllers {
     public class TicTacToeController : Controller {
         static Dictionary<string, GameInfo> games = new Dictionary<string, GameInfo>();
-        //static Dictionary<string, int> lobbies = new Dictionary<string, int>();
 
         public IActionResult Index() {
             var lobbiesToRemove = games.Where(e => e.Value.Counter[0] == LobbyControl.ToRemove)
@@ -35,17 +27,8 @@ namespace Project_MMXXIII.Controllers {
         }
 
         public async Task<IActionResult> Game(string id) {
-            ViewData["id"] = id;
-            ViewData["symbol"] = 'o';
             GameInfo gameInfo = new GameInfo();
-
-            if (!games.TryGetValue(id, out gameInfo)) {
-                ViewData["symbol"] = 'x';
-            }
-            else if (games[id].Counter[0] >= LobbyControl.TwoPlayers) {
-                return Redirect("/tictactoe/");
-            }
-
+           
             if (HttpContext.WebSockets.IsWebSocketRequest) {
                 var symbol = 'o';
                 if (!games.TryGetValue(id, out gameInfo)) {
@@ -59,11 +42,17 @@ namespace Project_MMXXIII.Controllers {
                     gameInfo.Queues = new List<int>();
                     gameInfo.Counter = new LobbyControl[1];
                     gameInfo.Counter[0] = LobbyControl.OnePlayer;
+                    gameInfo.Symbols = new List<char>();
+                    gameInfo.Symbols!.Add('x');
                     games.Add(id, gameInfo);
                     symbol = 'x';
                 }
-                else if (games[id].Counter[0] < LobbyControl.TwoPlayers){
-                    games[id].Counter[0]++;
+                else if (games[id].Counter[0] < LobbyControl.TwoPlayers) {
+                    if (games[id].Symbols.Count == 1) {
+                        symbol = games[id].Symbols[0] == 'x' ? 'o' : 'x';
+                        games[id].Symbols.Add(symbol);
+                    }
+                    games[id].Counter[0] = LobbyControl.TwoPlayers;
                 }
                 else {
                     return Redirect(nameof(Index));
@@ -73,18 +62,21 @@ namespace Project_MMXXIII.Controllers {
                 await new GamesLogic.TicTacToe(games[id], symbol).Echo(webSocket);
             } 
             else {
-                HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+                ViewData["id"] = id;
+                ViewData["symbol"] = 'o';
+
+                if (!games.TryGetValue(id, out gameInfo))
+                {
+                    ViewData["symbol"] = 'x';
+                } else if (games[id].Counter[0] >= LobbyControl.TwoPlayers)
+                {
+                    return Redirect("/tictactoe/");
+                } else
+                {
+                    ViewData["symbol"] = games[id].Symbols[0] == 'x' ? 'o' : 'x';
+                }
             }
             return View();
         }
-    }
-
-    public struct GameInfo {
-        public char[,] Table;
-        public bool[] Turn;
-        public bool[] Finished;
-        public char[] SymbolWin;
-        public List<int> Queues;
-        public LobbyControl[] Counter; 
     }
 }

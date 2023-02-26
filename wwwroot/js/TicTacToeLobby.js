@@ -1,8 +1,10 @@
 ﻿let createButton = document.getElementById("create-button");
 let refreshButton = document.getElementById("refresh-button");
+let joinButton = document.getElementById("join-button");
 
 createButton.addEventListener("click", function () { newLobby(); });
 refreshButton.addEventListener("click", function () { location.reload(); });
+joinButton.addEventListener("click", function () { joinGame(); })
 
 async function newLobby() {
     let gameId = makeid(6); 
@@ -23,4 +25,9 @@ function makeid(length) {
         counter += 1;
     }
     return result;
+}
+
+function joinGame() {
+    let lobbyIdInput = document.getElementById("lobby-id-input").value;
+    open("tictactoe/game/" + lobbyIdInput, "_self");
 }

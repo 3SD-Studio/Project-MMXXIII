@@ -44,6 +44,7 @@ namespace Project_MMXXIII.GamesLogic {
                     ProcessRecievedMessage(buffer, receiveResult.Count, webSocket);
                 }
             }
+            gameInfo.Symbols.Remove(symbol);
             gameInfo.Counter[0]--;
             if (gameInfo.Counter[0] == 0) {
                 //code to remove from lobbies center
@@ -190,8 +191,24 @@ namespace Project_MMXXIII.GamesLogic {
             //Checked ✔️
             else {
                 return false;
-            }
-                
+            }  
         }
+
+        public struct GameInfo {
+            public char[,] Table;
+            public bool[] Turn;
+            public bool[] Finished;
+            public char[] SymbolWin;
+            public List<int> Queues;
+            public LobbyControl[] Counter;
+            public List<char> Symbols;
+        }
+
+        public enum LobbyControl {
+            ToRemove = -1,
+            Empty,
+            OnePlayer,
+            TwoPlayers
+        };
     }        
 }
