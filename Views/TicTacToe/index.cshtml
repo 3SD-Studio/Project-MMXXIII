@@ -15,8 +15,10 @@
 </div>
 
 <br />
+@if (((IEnumerable<KeyValuePair<string, Project_MMXXIII.GamesLogic.TicTacToe.LobbyControl>>)ViewData["lobbies"]!).Count() > 0) {
+    <h3>Available lobbies:</h3>
+}
 
-<h3>Available lobbies:</h3>
 
 <div id="lobby-list-container"> 
 
@@ -30,6 +32,7 @@
                         <a href="/tictactoe/game/@item.Key">
                             <div>
                                 <p>@item.Key</p>
+                                <p>1/2</p>
                             </div>
                         </a>
                         <br>

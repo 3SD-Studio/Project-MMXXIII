@@ -6,8 +6,18 @@
     <title>@ViewData["Title"] - Project-MMXXIII</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Project_MMXXIII.styles.css" asp-append-version="true" />
 </head>
+
+<style>
+ #collapsed-list { 
+    display: none;
+}
+
+#collapsed-list a{
+    display: block;
+}
+
+</style>
 
 <body>
     <header>
@@ -19,14 +29,21 @@
                             Project-MMXXIII
                         </div>
                     </li>
-                    <li class="" id="index-nav-link">
-                        <a class="" href="/App">Home</a>
+                    <li class="" id="index-nav-link" onmouseleave='hide();'>
+                        <a class="" id="games-link" href="/App" onmouseover='show();'>Games</a>
+                        <div id="collapsed-list" >
+                            <a href="">Tic Tac Toe</a>
+                            <a href="">Rock Paper Scissors</a>
+                        </div>
                     </li>
-                    <li class="" id="privacy-nav-link">
-                        <a class="" asp-area="" asp-page="/Privacy">Privacy</a>
+                    <li>
+                        <a class="" href="/">Scoreboard</a>
                     </li>
-                    <li class="" id="websocketstest-nav-link">
-                        <a class="" asp-area="" asp-page="/WebSocketsTest">WebSocketsTest</a>
+                    <li>
+                        <a class="" href="/">Friends</a>
+                    </li>
+                    <li>
+                        <a class="" href="/">Profile</a>
                     </li>
                 </ul>
             </div>
@@ -54,3 +71,16 @@
     
 </body>
 </html>
+
+<script>
+
+    function show(){
+        document.getElementById("collapsed-list").style.display = "block";
+    }
+
+    function hide(){
+        document.getElementById("collapsed-list").style.display = "none";
+    }
+
+
+</script>
