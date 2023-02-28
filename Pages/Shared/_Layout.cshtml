@@ -8,19 +8,8 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 
-<style>
- #collapsed-list { 
-    display: none;
-}
-
-#collapsed-list a{
-    display: block;
-}
-
-</style>
-
 <body>
-    <header>
+    <header onmouseleave='hide();'>
         <nav class="custom-navbar">
             <div id="navbar-list-container">
                 <ul class="navbar-list">
@@ -29,12 +18,8 @@
                             Project-MMXXIII
                         </div>
                     </li>
-                    <li class="" id="index-nav-link" onmouseleave='hide();'>
+                    <li class="" id="index-nav-link">
                         <a class="" id="games-link" href="/App" onmouseover='show();'>Games</a>
-                        <div id="collapsed-list" >
-                            <a href="">Tic Tac Toe</a>
-                            <a href="">Rock Paper Scissors</a>
-                        </div>
                     </li>
                     <li>
                         <a class="" href="/">Scoreboard</a>
@@ -49,7 +34,16 @@
             </div>
         </nav>
 
+        <div id="collapsed-list">
+            <a href="">Tic Tac Toe</a>
+            <a href="">Rock Paper Scissors</a>
+            <a href="">Rock Paper Scissors</a>
+            <a href="">Rock Paper Scissors</a>
+            <a href="">Rock Paper Scissors</a>
+            <div style="clear:both;"></div>
+        </div>
     </header>
+
 
     <div class="container">
         <main role="main" class="pb-3">
@@ -71,16 +65,3 @@
     
 </body>
 </html>
-
-<script>
-
-    function show(){
-        document.getElementById("collapsed-list").style.display = "block";
-    }
-
-    function hide(){
-        document.getElementById("collapsed-list").style.display = "none";
-    }
-
-
-</script>
