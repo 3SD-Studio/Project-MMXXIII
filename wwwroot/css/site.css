@@ -79,6 +79,7 @@ navbar {
 
 .navbar-list li {
     float: left;
+
 }
 
 .navbar-list a {
@@ -94,12 +95,16 @@ navbar {
 }
 
 #project-name {
+    text-decoration: none;
     font-size: 30px;
     color: white;
     display: block;
     text-align: center;
     padding: 5px;
-    padding-right:15px;
+    padding-right: 15px;
+}
+#project-name:hover{
+    background-color:inherit;    
 }
 
 #collapsed-list {
