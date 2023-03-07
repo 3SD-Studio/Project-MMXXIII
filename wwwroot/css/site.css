@@ -97,6 +97,7 @@ navbar {
 #project-name {
     text-decoration: none;
     font-size: 30px;
+    font-weight:500;
     color: white;
     display: block;
     text-align: center;
@@ -134,10 +135,12 @@ navbar {
 
 #tile-list li{
     float:left;
-    margin-right: 30px;
+    margin-right: 15px;
+    margin-left: 15px;
+    margin-bottom: 30px;
 }
-
-.tile{
+ 
+.tile {
     border: 2px solid var(--fifth);
     border-radius: 10px;
     width:200px;
@@ -146,19 +149,37 @@ navbar {
     background-color:inherit;
 }
 
-.tile p{
+.tile p {
     font-size: 25px;
     text-align: center;
 }
 
-#tile-list a{
+#tile-list a {
     text-decoration: none;
     height: inherit;
     width: inherit;   
     transition: background-color 0.2s;
 }
 
-#tile-list a:hover{
+#tile-list a:hover {
     background-color: var(--third);
     color:white;
 }
+
+.display-4 {
+    text-align:center;
+    margin: 30px 0 50px 0;
+    font-weight: 400;
+}
+
+.games-list {
+    width:800px;
+    margin: auto;
+}
+
+.game-image{
+    width:120px;
+    height:120px;
+    margin: 30px auto 30px auto;
+    display: block;
+}   
