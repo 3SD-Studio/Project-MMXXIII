@@ -127,3 +127,38 @@ navbar {
 #collapsed-list a:hover {
     background-color: var(--fifth);
 }
+
+#tile-list{
+    list-style-type:none;
+}
+
+#tile-list li{
+    float:left;
+    margin-right: 30px;
+}
+
+.tile{
+    border: 2px solid var(--fifth);
+    border-radius: 10px;
+    width:200px;
+    height:250px;
+    align-items: center;
+    background-color:inherit;
+}
+
+.tile p{
+    font-size: 25px;
+    text-align: center;
+}
+
+#tile-list a{
+    text-decoration: none;
+    height: inherit;
+    width: inherit;   
+    transition: background-color 0.2s;
+}
+
+#tile-list a:hover{
+    background-color: var(--third);
+    color:white;
+}
