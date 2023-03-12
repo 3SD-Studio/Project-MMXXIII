@@ -1,6 +1,17 @@
-﻿using System.Net.WebSockets;
+using System.Net.WebSockets;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Project_MMXXIII.Areas.Identity.Data;
+using Project_MMXXIII.Data;
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("DBContextConnection") ?? throw new InvalidOperationException("Connection string 'DBContextConnection' not found.");
+
+builder.Services.AddDbContext<DBContext>(options =>
+    options.UseSqlServer(connectionString));
+
+builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<DBContext>();
 
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -27,6 +38,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseAuthentication();;
 
 app.UseAuthorization();
 
