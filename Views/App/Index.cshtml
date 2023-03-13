@@ -3,8 +3,18 @@
 }
 
 <div class="games-list">
-    <h1 class="display-4">Hello (username)</h1>
-    <ul id="tile-list">
+    <h1 class="display-4">Hello @{
+            if (Context.User != null && Context.User.Identity.IsAuthenticated) {
+
+                Console.WriteLine("HELLLOOOO");
+                <p>@Context.User.Identity.Name</p>
+\            } else
+            {
+                Console.WriteLine("NOT HELLLOOOO");
+            }
+        }
+            </h1>
+            <ul id="tile-list">
         <li>
             <a href="/TicTacToe">
                 <div class="tile">
